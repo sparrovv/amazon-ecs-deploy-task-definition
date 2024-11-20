@@ -110,6 +110,7 @@ async function waitForTasksStopped(ecs, clusterName, taskArns, waitForMinutes) {
 
 // Check a task's exit code and fail the job on error
 async function tasksExitCode(ecs, clusterName, taskArns, waitForExitCodesContainerNames) {
+  console.log(`waitForExitCodesContainerNames: ${waitForExitCodesContainerNames}`);
   const describeResponse = await ecs.describeTasks({
     cluster: clusterName,
     tasks: taskArns
@@ -119,6 +120,7 @@ async function tasksExitCode(ecs, clusterName, taskArns, waitForExitCodesContain
 
   if (waitForExitCodesContainerNames.length > 0) {
     containers = containers.filter(container => waitForExitCodesContainerNames.includes(container.name))
+    console.log(`containers: ${containers}`);
   }
 
   const exitCodes = containers.map(container => container.exitCode)
