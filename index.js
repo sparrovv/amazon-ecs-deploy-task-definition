@@ -33,7 +33,7 @@ async function runTask(ecs, clusterName, taskDefArn, waitForMinutes, enableECSMa
   const assignPublicIP = core.getInput('run-task-assign-public-IP', { required: false }) || 'DISABLED';
   const tags = JSON.parse(core.getInput('run-task-tags', { required: false }) || '[]');
   const capacityProviderStrategy = JSON.parse(core.getInput('run-task-capacity-provider-strategy', { required: false }) || '[]');
-  const waitForExitCodesContainerNames = JSON.parse(core.getInput('run-task-container-names', { required: false }) || '[]');
+  const waitForExitCodesContainerNames = JSON.parse(core.getInput('run-task-container-names-exit-codes-check', { required: false }) || '[]');
 
   let awsvpcConfiguration = {}
 

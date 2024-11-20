@@ -67,7 +67,7 @@ inputs:
   run-task-tags:
     description: "A JSON array of tags."
     required: false
-  run-task-container-names:
+  run-task-container-names-exit-codes-check:
     description: "A JSON array of container names to check for exit codes = 0 when running a task outside of a service. Will default to all containers in the task definition."
     required: false
   wait-for-task-stopped:
