@@ -1,17 +1,17 @@
 name: 'Amazon ECS "Deploy Task Definition" Action for GitHub Actions'
-description: 'Registers an Amazon ECS task definition, and deploys it to an ECS service'
+description: "Registers an Amazon ECS task definition, and deploys it to an ECS service"
 branding:
-  icon: 'cloud'
-  color: 'orange'
+  icon: "cloud"
+  color: "orange"
 inputs:
   task-definition:
-    description: 'The path to the ECS task definition file to register.'
+    description: "The path to the ECS task definition file to register."
     required: true
   desired-count:
-    description: 'The number of instantiations of the task to place and keep running in your service.'
+    description: "The number of instantiations of the task to place and keep running in your service."
     required: false
   service:
-    description: 'The name of the ECS service to deploy to. If no service is given, the action will not deploy the task, but only register the task definition.'
+    description: "The name of the ECS service to deploy to. If no service is given, the action will not deploy the task, but only register the task definition."
     required: false
   cluster:
     description: "The name of the ECS service's cluster.  Will default to the 'default' cluster."
@@ -20,7 +20,7 @@ inputs:
     description: 'Whether to wait for the ECS service to reach stable state after deploying the new task definition. Valid value is "true". Will default to not waiting.'
     required: false
   wait-for-minutes:
-    description: 'How long to wait for the ECS service to reach stable state, in minutes (default: 30 minutes, max: 6 hours). For CodeDeploy deployments, any wait time configured in the CodeDeploy deployment group will be added to this value.'
+    description: "How long to wait for the ECS service to reach stable state, in minutes (default: 30 minutes, max: 6 hours). For CodeDeploy deployments, any wait time configured in the CodeDeploy deployment group will be added to this value."
     required: false
   codedeploy-appspec:
     description: "The path to the AWS CodeDeploy AppSpec file, if the ECS service uses the CODE_DEPLOY deployment controller. Will default to 'appspec.yaml'."
@@ -41,22 +41,22 @@ inputs:
     description: 'Whether to force a new deployment of the service. Valid value is "true". Will default to not force a new deployment.'
     required: false
   run-task:
-    description: 'A boolean indicating whether to run a stand-alone task in a ECS cluster. Task will run before the service is updated if both are provided. Default value is false .'
+    description: "A boolean indicating whether to run a stand-alone task in a ECS cluster. Task will run before the service is updated if both are provided. Default value is false ."
     required: false
   run-task-container-overrides:
-    description: 'A JSON array of container override objects which should applied when running a task outside of a service. Warning: Do not expose this field to untrusted inputs. More details: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ContainerOverride.html'
+    description: "A JSON array of container override objects which should applied when running a task outside of a service. Warning: Do not expose this field to untrusted inputs. More details: https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ContainerOverride.html"
     required: false
   run-task-security-groups:
-    description: 'A comma-separated list of security group IDs to assign to a task when run outside of a service. Will default to none.'
+    description: "A comma-separated list of security group IDs to assign to a task when run outside of a service. Will default to none."
     required: false
   run-task-subnets:
-    description: 'A comma-separated list of subnet IDs to assign to a task when run outside of a service. Will default to none.'
+    description: "A comma-separated list of subnet IDs to assign to a task when run outside of a service. Will default to none."
     required: false
   run-task-assign-public-IP:
     description: "Whether the task's elastic network interface receives a public IP address. The default value is DISABLED but will only be applied if run-task-subnets or run-task-security-groups are also set."
     required: false
   run-task-capacity-provider-strategy:
-    description: 'A JSON array of capacity provider strategy items which should applied when running a task outside of a service. Will default to none.'
+    description: "A JSON array of capacity provider strategy items which should applied when running a task outside of a service. Will default to none."
     required: false
   run-task-launch-type:
     description: "ECS launch type for tasks run outside of a service. Valid values are 'FARGATE' or 'EC2'. Will default to 'FARGATE'. Will only be applied if run-task-capacity-provider-strategy is not set."
@@ -65,10 +65,13 @@ inputs:
     description: "A name to use for the startedBy tag when running a task outside of a service. Will default to 'GitHub-Actions'."
     required: false
   run-task-tags:
-    description: 'A JSON array of tags.'
+    description: "A JSON array of tags."
+    required: false
+  run-task-container-names:
+    description: "A JSON array of container names to check for exit codes = 0 when running a task outside of a service. Will default to all containers in the task definition."
     required: false
   wait-for-task-stopped:
-    description: 'Whether to wait for the task to stop when running it outside of a service. Will default to not wait.'
+    description: "Whether to wait for the task to stop when running it outside of a service. Will default to not wait."
     required: false
   enable-ecs-managed-tags:
     description: "Determines whether to turn on Amazon ECS managed tags 'aws:ecs:serviceName' and 'aws:ecs:clusterName' for the tasks in the service."
@@ -78,9 +81,9 @@ inputs:
     required: false
 outputs:
   task-definition-arn:
-    description: 'The ARN of the registered ECS task definition.'
+    description: "The ARN of the registered ECS task definition."
   codedeploy-deployment-id:
-    description: 'The deployment ID of the CodeDeploy deployment (if the ECS service uses the CODE_DEPLOY deployment controller).'
+    description: "The deployment ID of the CodeDeploy deployment (if the ECS service uses the CODE_DEPLOY deployment controller)."
 runs:
-  using: 'node20'
-  main: 'dist/index.js'
+  using: "node20"
+  main: "dist/index.js"

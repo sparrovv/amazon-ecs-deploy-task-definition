@@ -33,6 +33,7 @@ async function runTask(ecs, clusterName, taskDefArn, waitForMinutes, enableECSMa
   const assignPublicIP = core.getInput('run-task-assign-public-IP', { required: false }) || 'DISABLED';
   const tags = JSON.parse(core.getInput('run-task-tags', { required: false }) || '[]');
   const capacityProviderStrategy = JSON.parse(core.getInput('run-task-capacity-provider-strategy', { required: false }) || '[]');
+  const waitForExitCodesContainerNames = JSON.parse(core.getInput('run-task-container-names', { required: false }) || '[]');
 
   let awsvpcConfiguration = {}
 
@@ -80,7 +81,7 @@ async function runTask(ecs, clusterName, taskDefArn, waitForMinutes, enableECSMa
   // Wait for task to end
   if (waitForTask && waitForTask.toLowerCase() === "true") {
     await waitForTasksStopped(ecs, clusterName, taskArns, waitForMinutes)
-    await tasksExitCode(ecs, clusterName, taskArns)
+    await tasksExitCode(ecs, clusterName, taskArns, waitForExitCodesContainerNames)
   } else {
     core.debug('Not waiting for the task to stop');
   }
@@ -108,14 +109,20 @@ async function waitForTasksStopped(ecs, clusterName, taskArns, waitForMinutes) {
 }
 
 // Check a task's exit code and fail the job on error
-async function tasksExitCode(ecs, clusterName, taskArns) {
+async function tasksExitCode(ecs, clusterName, taskArns, waitForExitCodesContainerNames) {
   const describeResponse = await ecs.describeTasks({
     cluster: clusterName,
     tasks: taskArns
   });
 
-  const containers = [].concat(...describeResponse.tasks.map(task => task.containers))
+  let containers = [].concat(...describeResponse.tasks.map(task => task.containers))
+
+  if (waitForExitCodesContainerNames.length > 0) {
+    containers = containers.filter(container => waitForExitCodesContainerNames.includes(container.name))
+  }
+
   const exitCodes = containers.map(container => container.exitCode)
+
   const reasons = containers.map(container => container.reason)
 
   const failuresIdx = [];
